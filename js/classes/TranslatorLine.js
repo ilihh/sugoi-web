@@ -10,7 +10,7 @@ class TranslatorLine
 	{
 		this.element = element;
 		this.original = element.innerHTML.trim() === '<br>' ? '.' : element.innerText.trim();
-		this._translation = '';
+		this._translation = this.needTranslate ? '' : this.original;
 	}
 
 	/**

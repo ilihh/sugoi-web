@@ -23,7 +23,14 @@ class Translator
 	 *
 	 * @type {number}
 	 */
-	requests = 10;
+	concurrentRequests = 10;
+
+	/**
+	 *
+	 * @type {number}
+	 * @private
+	 */
+	_currentRequests = 0;
 
 	/**
 	 *
@@ -71,35 +78,55 @@ class Translator
 
 	/**
 	 *
-	 * @param {[TranslatorLine]} lines
+	 * @param {TranslatorLine[]} lines
 	 * @returns {Promise<void>}
 	 */
 	async run(lines)
+	{
+		let i = 0;
+		let promises;
+
+		[i, promises] = this._batchTranslate(i, lines);
+
+		const next = () => {
+			let next_promises;
+			[i, next_promises] = this._batchTranslate(i, lines);
+			const p = Promise.race(next_promises);
+
+			return i < lines.length ? p.then(next) : p;
+		};
+
+		return await Promise.race(promises).then(next);
+	}
+
+	/**
+	 *
+	 * @param {number} i
+	 * @param {TranslatorLine[]} lines
+	 * @returns [{number}, {Promise<void>[]]
+	 * @private
+	 */
+	_batchTranslate(i, lines)
 	{
 		/**
 		 *
 		 * @type {Promise<void>[]}
 		 */
 		const promises = [];
-		let i = 0;
-		for (i = 0; i < lines.length; i++)
+		for (; i < lines.length; i++)
 		{
-			if (i === this.requests)
+			if (this._currentRequests === this.concurrentRequests)
 			{
 				break;
 			}
 
-			promises.push(this._translate(lines[i]));
+			if (lines[i].needTranslate)
+			{
+				promises.push(this._translate(lines[i]));
+			}
 		}
 
-		const next = () => {
-			const p = this._translate(lines[i]);
-			i += 1;
-
-			return i < lines.length ? p.then(next) : p;
-		};
-
-		return await Promise.race(promises).then(next);
+		return [i, promises];
 	}
 
 	/**
@@ -110,9 +137,11 @@ class Translator
 	 */
 	async _translate(line)
 	{
-		line.translation = line.needTranslate
-			? await this._request(line.original)
-			: line.original;
+		this._currentRequests += 1;
+
+		line.translation = await this._request(line.original);
+
+		this._currentRequests -= 1;
 	}
 
 	/**

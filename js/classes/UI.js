@@ -48,7 +48,7 @@ class UI
 	{
 		this._config = config;
 		this.translator.port = config.port;
-		this.translator.requests = config.requests;
+		this.translator.concurrentRequests = config.requests;
 		this.updateView();
 	}
 
