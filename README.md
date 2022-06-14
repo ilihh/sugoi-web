@@ -8,7 +8,10 @@ To install:
 4. Enable **Developer Mode**
 5. Add extension using the "Load Unpacked" button
 
-Translation server should be started with **backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation / activateOfflineTranslationServer.bat**.
+To use:
+1. Open *{Sugoi folder} / backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation*
+2. Run *activateOfflineTranslationServer.bat* to start server.
+3. Now **Translate** button is works
 
 Recommended to update server to correctly translate long lines:
 1. Download the *server* archive from Releases
