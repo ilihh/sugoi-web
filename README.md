@@ -2,7 +2,7 @@
 Chrome extension: translates japanese web novels using [Sugoi Offline Translation Server](https://www.patreon.com/mingshiba) 
 
 To install:
-1. Download the *sugoi-web* archive from Releases
+1. Download the *Source code (zip)* archive from Releases
 2. Unpack the archive
 3. Open extensions page (*chrome://extensions/*)
 4. Enable **Developer Mode**
@@ -20,3 +20,12 @@ Recommended to update server to correctly translate long lines:
 
 Notes:
 * For now supported only *.syosetu.com.
+
+Known Problems:
+* Error: *Sugoi Offline Translation Server is not available.*
+  - Reasons: 
+    - Server not started
+    - Access blocked by AdBlock, Brave Shields, or other similar extensions
+  - Solutions:
+    - Start server
+    - Temporarily disable those extensions for the current page or add *http://127.0.0.1:14366* to the whitelist if possible

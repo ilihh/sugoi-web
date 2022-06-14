@@ -72,6 +72,8 @@ class Translator
 		}
 		catch (e)
 		{
+			console.error(e);
+			console.error(e.message);
 			return false;
 		}
 	}

@@ -95,7 +95,7 @@ class UI
 		const enabled = await this.translator.serverAvailable();
 		if (!enabled)
 		{
-			alert('Sugoi Offline Translation Server is not available.');
+			alert('Sugoi Offline Translation Server is not available.\nProbably server not started or access blocked by AdBlock, Brave Shields, or other similar extensions.');
 			this._buttonTranslate.style.display = 'block';
 			return;
 		}
