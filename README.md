@@ -1,5 +1,5 @@
 # Sugoi-web
-Chrome extension: translates japanese web novels using [Sugoi Offline Translation Server](https://www.patreon.com/mingshiba) 
+Chrome extension to translate Japanese web novels with Sugoi Offline Translation Server
 
 **To install:**
 1. Download the *Source code (zip)* archive from Releases
