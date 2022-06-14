@@ -1,10 +1,10 @@
 # Sugoi-web
-Chrome extension: translates pages using Sugoi Offline Translation Server (https://www.patreon.com/mingshiba) 
+Chrome extension: translates pages using [Sugoi Offline Translation Server](https://www.patreon.com/mingshiba) 
 
 To install:
 1. Download the *sugoi-web* archive from Releases
 2. Unpack the archive
-3. Open [Extensions](chrome://extensions/)
+3. Open extensions page (*chrome://extensions/*)
 4. Enable **Developer Mode**
 5. Add extension using the "Load Unpacked" button
 
