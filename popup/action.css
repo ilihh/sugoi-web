@@ -1,0 +1,16 @@
+body {
+	margin: 0;
+	padding: 10px;
+}
+
+div {
+	margin-bottom: 0.2em;
+}
+
+input[name=port] {
+	width: 60px;
+}
+
+input[name=requests] {
+	width: 30px;
+}

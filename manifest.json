@@ -1,0 +1,48 @@
+{
+	"name": "Sugoi Web Translation",
+	"version": "1.0.0",
+
+	"manifest_version": 3,
+	"incognito": "split",
+
+	"description": "",
+	"icons": {
+		"128": "images/s128.png",
+		"16": "images/s16.png",
+		"48": "images/s48.png"
+	},
+
+	"action": {
+		"default_icon": {
+			"32": "images/s32.png"
+		},
+		"default_title": "Sugoi Web Translation",
+		"default_popup": "popup/action.html"
+	},
+
+	"permissions": ["storage", "tabs"],
+	"background": {
+		"service_worker": "js/background.js"
+	},
+	"content_scripts":[
+		{
+			"js": [
+				"js/vendor/jquery-3.4.1.min.js",
+
+				"js/classes/proxy/Proxy.js",
+				"js/classes/proxy/ProxySyosetu.js",
+
+				"js/classes/ChromeApi.js",
+				"js/classes/Config.js",
+				"js/classes/Translator.js",
+				"js/classes/TranslatorLine.js",
+				"js/classes/UI.js",
+
+				"js/main.js"
+			],
+			"matches": [ "*://*.syosetu.com/*", "*://syosetu.com/*" ],
+			"run_at": "document_end",
+			"all_frames": true
+		}
+	]
+}

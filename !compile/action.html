@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Sugoi Web Translation</title>
+	<meta content="text/html; charset=utf-8">
+	<script src="../js/vendor/vue.js"></script>
+</head>
+<body style="width: 400px;">
+	<div id="app">
+		<div>
+			<label>
+				Enabled: <input type="checkbox" v-model="enabled">
+			</label>
+		</div>
+		<div>
+			<label>
+				Always Translate: <input type="checkbox" v-model="alwaysTranslate">
+			</label>
+		</div>
+		<div>
+			<label>
+				Server Port:
+				<input name="port" type="number" v-model="port" min="1">
+			</label>
+		</div>
+		<div>
+			<label>
+				Concurrent Requests:
+				<input name="requests" type="number" v-model="requests" min="1">
+			</label>
+		</div>
+	</div>
+
+	<textarea id="output" style="width: 100%; height: 500px;">
+
+	</textarea>
+
+	<script>
+	const html = document.getElementById('app').innerHTML;
+	const compiled = Vue.compile('<div>' + html + '</div>');
+	console.log(compiled.render);
+	document.getElementById('output').value = compiled.render.toString();
+	</script>
+</body>
+</html>
