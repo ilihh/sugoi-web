@@ -59,6 +59,11 @@ class UI
 
 	async updateView()
 	{
+		if (this._buttonsBlock == null)
+		{
+			return;
+		}
+
 		if (this.config.enabled)
 		{
 			if (this._buttonsBlock.parentElement == null)
