@@ -9,6 +9,13 @@ class UI
 	proxy = null;
 
 	/**
+	 *
+	 * @type {Promise<void>}
+	 * @private
+	 */
+	_translation = null;
+
+	/**
 	 * 
 	 * @param {string} domain 
 	 */
@@ -33,6 +40,46 @@ class UI
 		this.chromeApi = new ChromeApi();
 		this.chromeApi.onStorageChanged(changes => this.config = changes['config'].newValue);
 		this.load();
+
+		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => this._processMessage(request, sender, sendResponse));
+	}
+
+	/**
+	 *
+	 * @param {any} request
+	 * @param {MessageSender} sender
+	 * @param {function} sendResponse
+	 */
+	async _processMessage(request, sender, sendResponse)
+	{
+		if (sender.tab)
+		{
+			return;
+		}
+
+		let response;
+		switch (request.action)
+		{
+			case 'canTranslate':
+				response = this.proxy.allowed;
+				break;
+			case 'translate':
+				if (this.proxy.allowed)
+				{
+					await (this._translation || this.translate());
+					response = true;
+				}
+				else
+				{
+					response = false;
+				}
+				break;
+			default:
+				response = null;
+				break;
+		}
+
+		sendResponse(response);
 	}
 
 	get config()
@@ -106,8 +153,10 @@ class UI
 		}
 
 		this.proxy.loadLines();
-		await this.translator.run(this.proxy.lines);
+		this._translation = this.translator.run(this.proxy.lines);
+		await this._translation;
 		this.proxy.validate();
+		this._translation = null;
 	}
 
 	createButtons()

@@ -29,18 +29,24 @@
 			"js": [
 				"js/vendor/jquery-3.4.1.min.js",
 
+				"js/classes/Translator.js",
+				"js/classes/TranslatorLine.js",
 				"js/classes/proxy/Proxy.js",
 				"js/classes/proxy/ProxySyosetu.js",
+				"js/classes/proxy/ProxyKakuyomu.js",
 
 				"js/classes/ChromeApi.js",
 				"js/classes/Config.js",
-				"js/classes/Translator.js",
-				"js/classes/TranslatorLine.js",
 				"js/classes/UI.js",
 
 				"js/main.js"
 			],
-			"matches": [ "*://*.syosetu.com/*", "*://syosetu.com/*" ],
+			"matches": [
+				"*://*.syosetu.com/*",
+				"*://syosetu.com/*",
+				"*://*.kakuyomu.jp/*",
+				"*://kakuyomu.jp/*"
+			],
 			"run_at": "document_end",
 			"all_frames": true
 		}

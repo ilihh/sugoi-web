@@ -12,16 +12,16 @@ function button_toggle(tab_id, enable)
 
 /**
  *
- * @param {any} data
+ * @param {any} request
  * @param {MessageSender} sender
  * @param {function} sendResponse
  */
-function processMessage(data, sender, sendResponse)
+function processMessage(request, sender, sendResponse)
 {
-	console.log('message:', data, sender);
+	console.log('message:', request, sender);
 
 	let response;
-	switch (data.action)
+	switch (request.action)
 	{
 		case 'show':
 			button_toggle(sender.tab.id, true);
@@ -32,7 +32,7 @@ function processMessage(data, sender, sendResponse)
 			response = {success: true};
 			break;
 		default:
-			console.error('Unknown request:', data);
+			console.error('Unknown request:', request);
 			response = {success: false};
 			break;
 	}
@@ -40,4 +40,31 @@ function processMessage(data, sender, sendResponse)
 	sendResponse(response);
 }
 
+/**
+ *
+ * @param {any} request
+ * @param {MessageSender} sender
+ * @param {function} sendResponse
+ */
+async function processExternalMessage(request, sender, sendResponse)
+{
+	let response;
+	switch (request.action)
+	{
+		case 'translate':
+			await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
+			response = true;
+			break;
+		case 'canTranslate':
+			response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'});
+			break;
+		default:
+			response = null;
+			break;
+	}
+
+	sendResponse(response);
+}
+
 chrome.runtime.onMessage.addListener(processMessage);
+chrome.runtime.onMessageExternal.addListener(processExternalMessage);

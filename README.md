@@ -18,8 +18,19 @@ Chrome extension to translate Japanese web novels with Sugoi Offline Translation
 2. Unpack the archive
 3. Copy files with overwrite to *backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation / fairseq*
 
+**Cross-extension messaging**
+
+Messages should be sent from content scripts.
+
+	const sugoiWebExtenstionId = "abcdefghijklmnoabcdefhijklmnoabc";
+	const can_translate = await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'canTranslate' });
+	if (can_translate)
+	{
+		await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'translate' });
+	}
+
 **Notes:**
-* For now supported only *.syosetu.com.
+* For now supported only syosetu.com and kakuyomu.jp.
 
 **Known Problems:**
 

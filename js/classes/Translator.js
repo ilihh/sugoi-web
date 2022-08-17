@@ -4,6 +4,8 @@ class Translator
 {
 	_domains = {
 		'.syosetu.com': () => new ProxySyosetu(),
+		'kakuyomu.jp': () => new ProxyKakuyomu(),
+		'.kakuyomu.jp': () => new ProxyKakuyomu(),
 	};
 
 	/**
