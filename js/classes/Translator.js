@@ -46,7 +46,7 @@ class Translator
 	/**
 	 *
 	 * @param domain
-	 * @returns {null|Proxy}
+	 * @returns {Proxy}
 	 */
 	getProxy(domain)
 	{
@@ -58,7 +58,25 @@ class Translator
 			}
 		}
 
-		return null;
+		return new ProxyUnavailable();
+	}
+
+	/**
+	 *
+	 * @param domain
+	 * @returns {boolean}
+	 */
+	supported(domain)
+	{
+		for (let d in this._domains)
+		{
+			if ((domain === d) || domain.endsWith(d))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

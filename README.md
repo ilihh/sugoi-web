@@ -22,7 +22,7 @@ Chrome extension to translate Japanese web novels with Sugoi Offline Translation
 
 Messages should be sent from content scripts.
 
-	const sugoiWebExtenstionId = "abcdefghijklmnoabcdefhijklmnoabc";
+	const sugoiWebExtenstionId = "abcdefghijklmnoabcdefhijklmnoabc"; // replace with actual id
 	const can_translate = await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'canTranslate' });
 	if (can_translate)
 	{

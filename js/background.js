@@ -12,6 +12,30 @@ function button_toggle(tab_id, enable)
 
 /**
  *
+ * @param domain
+ * @returns {boolean}
+ */
+function is_supported(domain)
+{
+	const domains = {
+		'.syosetu.com': true,
+		'kakuyomu.jp': true,
+		'.kakuyomu.jp': true,
+	};
+
+	for (let d in domains)
+	{
+		if ((domain === d) || domain.endsWith(d))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ *
  * @param {any} request
  * @param {MessageSender} sender
  * @param {function} sendResponse
@@ -48,15 +72,24 @@ function processMessage(request, sender, sendResponse)
  */
 async function processExternalMessage(request, sender, sendResponse)
 {
+	const domain = sender.url ? (new URL(sender.url)).host : '';
+	const supported = is_supported(domain);
+
 	let response;
 	switch (request.action)
 	{
 		case 'translate':
-			await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
-			response = true;
+			if (supported)
+			{
+				response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'});
+				if (response)
+				{
+					await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
+				}
+			}
 			break;
 		case 'canTranslate':
-			response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'});
+			response = supported && (await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'}));
 			break;
 		default:
 			response = null;

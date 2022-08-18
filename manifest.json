@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.0.2",
+	"version": "1.0.4",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -34,6 +34,7 @@
 				"js/classes/proxy/Proxy.js",
 				"js/classes/proxy/ProxySyosetu.js",
 				"js/classes/proxy/ProxyKakuyomu.js",
+				"js/classes/proxy/ProxyUnavailable.js",
 
 				"js/classes/ChromeApi.js",
 				"js/classes/Config.js",
