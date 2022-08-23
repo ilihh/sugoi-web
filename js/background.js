@@ -12,6 +12,7 @@ function button_toggle(tab_id, enable)
 
 /**
  *
+ * Duplication because service worker supports only es6 import, but content scripts do not.
  * @param domain
  * @returns {boolean}
  */
