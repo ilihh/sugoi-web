@@ -2,11 +2,27 @@
 
 class ProxySyosetu extends Proxy
 {
+	static
+	{
+		Proxy.derived.add(this)
+	}
+
 	constructor()
 	{
 		super();
 
 		this.content_selectors = ['#novel_p', '#novel_honbun', '#novel_a', ];
+	}
+
+	/**
+	 *
+	 * @param {string} domain
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	supported(domain)
+	{
+		return domain.endsWith('.syosetu.com');
 	}
 
 	/**

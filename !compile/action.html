@@ -18,16 +18,58 @@
 			</label>
 		</div>
 		<div>
+			Translator:
 			<label>
-				Server Port:
-				<input name="port" type="number" v-model="port" min="1">
+				<input type="radio" v-model="mode" v-bind:value="constants.MODE_SUGOI">
+				Sugoi
+			</label>
+
+			<label>
+				<input type="radio" v-model="mode" v-bind:value="constants.MODE_DEEPL">
+				DeepL
 			</label>
 		</div>
-		<div>
-			<label>
-				Concurrent Requests:
-				<input name="requests" type="number" v-model="requests" min="1">
-			</label>
+		<div v-show="mode === constants.MODE_SUGOI">
+			<div style="font-weight: bold;">Sugoi</div>
+			<div>
+				<label>
+					Server Port:
+					<input name="port" type="number" v-model="port" min="1">
+				</label>
+			</div>
+			<div>
+				<label>
+					Concurrent Requests:
+					<input name="requests" type="number" v-model="requests" min="1">
+				</label>
+			</div>
+		</div>
+		<div v-show="mode === constants.MODE_DEEPL">
+			<div style="font-weight: bold;">DeepL</div>
+			<div>
+				<label>
+					API key:
+					<input name="deepl_key" type="text" v-model="deepl_key" style="width: 340px;">
+				</label>
+			</div>
+			<div>
+				Mode:
+				<label>
+					<input type="radio" v-model="deepl_free" v-bind:value="true">
+					Free
+				</label>
+
+				<label>
+					<input type="radio" v-model="deepl_free" v-bind:value="false">
+					Pro
+				</label>
+			</div>
+			<div>
+				<label>
+					Texts per request:
+					<input name="deepl_texts_per_request" type="number" v-model="deepl_texts_per_request" min="1" max="50" style="width: 40px;">
+				</label>
+			</div>
 		</div>
 	</div>
 

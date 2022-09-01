@@ -1,5 +1,5 @@
 # Sugoi-web
-Chrome extension to translate Japanese web novels with Sugoi Offline Translation Server (https://www.patreon.com/mingshiba)
+Chrome extension to translate Japanese web novels with Sugoi Offline Translation Server (https://www.patreon.com/mingshiba) or DeepL API.
 
 **Installation:**
 1. Download the *Source code (zip)* archive from Releases
@@ -8,7 +8,7 @@ Chrome extension to translate Japanese web novels with Sugoi Offline Translation
 4. Enable **Developer Mode**
 5. Add extension using the "Load Unpacked" button
 
-**Using:**
+**Using with Sugoi:**
 1. Open *{Sugoi folder} / backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation*
 2. Run *activateOfflineTranslationServer.bat* to start server.
 3. Now **Translate** button is works

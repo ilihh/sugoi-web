@@ -1,5 +1,104 @@
 'use strict';
 
+class DeepL
+{
+	/**
+	 *
+	 * @type {string}
+	 * @private
+	 */
+	_api_key = '';
+
+	/**
+	 *
+	 * @type {boolean}
+	 * @private
+	 */
+	_api_free = true;
+
+	/***
+	 * limit: 500 000 symbols per month
+	 * @type {string}
+	 * @private
+	 */
+	_url_free = 'https://api-free.deepl.com/v2/translate';
+
+	/**
+	 *
+	 * @type {string}
+	 * @private
+	 */
+	_url_pro = 'https://api.deepl.com/v2/translate';
+
+	/**
+	 * @param {Config} config
+	 */
+	constructor(config)
+	{
+		this._api_key = config.deepl_key;
+		this._api_free = config.deepl_free;
+	}
+
+	/**
+	 *
+	 * @type {string}
+	 */
+	get url()
+	{
+		return this._api_free ? this._url_free : this._url_pro;
+	}
+
+	/**
+	 *
+	 * @param {string[]} lines
+	 * @returns {Promise<string[]>}
+	 */
+	async translate(lines)
+	{
+		let data = 'source_lang=JA&target_lang=EN';
+		for (let i = 0; i < lines.length; i++)
+		{
+			data += '&text=' + encodeURIComponent(lines[i]);
+		}
+
+		/*
+		const response = await fetch(this.url, {
+			method: 'POST',
+			body: data,
+			headers: {
+				'Authorization': 'DeepL-Auth-Key ' + this._api_key,
+				'Content-Type': 'application/x-www-form-urlencoded',
+			}
+		});
+		*/
+		const response = await fetch('https://api-free.deepl.com/v2/translate', {
+			method: 'POST',
+			body: data,
+			headers: {
+				'Authorization': 'DeepL-Auth-Key 3e598917-623e-c1dc-1163-cad97a555430:fx',
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		});
+
+		const result = [];
+
+		if (!response.ok)
+		{
+			console.error('Status: ' + response.status + ' // ' + response.statusText);
+			return result;
+		}
+
+		const json = await response.json();
+
+		for (let i = 0; i < lines.length; i++)
+		{
+			result.push(json.translations[i].text);
+		}
+
+		return result;
+	}
+}
+
 function button_toggle(tab_id, enable)
 {
 	chrome.action.enable(tab_id);
@@ -37,11 +136,36 @@ function is_supported(domain)
 
 /**
  *
+ * @param {string} key
+ * @returns {Promise<Config>}
+ */
+async function storage_get(key)
+{
+	return new Promise(resolve => {
+		chrome.storage.local.get([key], response => {
+			resolve(response[key] ?? null);
+		});
+	});
+}
+
+/**
+ *
+ * @param {string[]} lines
+ */
+async function deepl_translate(lines)
+{
+	const config = await storage_get('config');
+	const t = new DeepL(config);
+	return await t.translate(lines);
+}
+
+/**
+ *
  * @param {any} request
  * @param {MessageSender} sender
  * @param {function} sendResponse
  */
-function processMessage(request, sender, sendResponse)
+async function processMessage(request, sender)
 {
 	console.log('message:', request, sender);
 
@@ -56,13 +180,16 @@ function processMessage(request, sender, sendResponse)
 			button_toggle(sender.tab.id, false);
 			response = {success: true};
 			break;
+		case 'deepl':
+			response = await deepl_translate(request.data);
+			break;
 		default:
 			console.error('Unknown request:', request);
 			response = {success: false};
 			break;
 	}
 
-	sendResponse(response);
+	return response;
 }
 
 /**
@@ -100,5 +227,9 @@ async function processExternalMessage(request, sender, sendResponse)
 	sendResponse(response);
 }
 
-chrome.runtime.onMessage.addListener(processMessage);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	processMessage(request, sender).then(sendResponse);
+	return true;
+});
+
 chrome.runtime.onMessageExternal.addListener(processExternalMessage);

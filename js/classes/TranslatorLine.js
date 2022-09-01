@@ -19,7 +19,7 @@ class TranslatorLine
 	 */
 	get needTranslate()
 	{
-		return !['.', '', '「', '」'].includes(this.original);
+		return !['.', '', '「', '」', '・'].includes(this.original);
 	}
 
 	/**

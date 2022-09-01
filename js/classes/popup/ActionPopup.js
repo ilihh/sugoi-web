@@ -43,6 +43,14 @@ class ActionPopup
 			el: '#app',
 			render: this.viewRender,
 			data: page.config,
+			computed: {
+				constants() {
+					return {
+						MODE_SUGOI: Config.MODE_SUGOI,
+						MODE_DEEPL: Config.MODE_DEEPL,
+					}
+				},
+			},
 			updated()
 			{
 				page.chromeApi.setConfig(this.$data);
@@ -60,7 +68,7 @@ class ActionPopup
 	async _init()
 	{
 		const response = await this.chromeApi.getConfig();
-		this.config = response ?? new Config();
+		this.config = Object.assign(new Config(), response ?? {});
 
 		this.app = this._createApp();
 	}

@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.0.4",
+	"version": "1.0.5",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -24,6 +24,12 @@
 	"background": {
 		"service_worker": "js/background.js"
 	},
+
+	"host_permissions": [
+		"https://api-free.deepl.com/v2/*",
+		"https://api.deepl.com/v2/*"
+	],
+
 	"content_scripts":[
 		{
 			"js": [
@@ -31,6 +37,9 @@
 
 				"js/classes/Translator.js",
 				"js/classes/TranslatorLine.js",
+				"js/classes/TranslatorSugoi.js",
+				"js/classes/TranslatorDeepL.js",
+
 				"js/classes/proxy/Proxy.js",
 				"js/classes/proxy/ProxySyosetu.js",
 				"js/classes/proxy/ProxyKakuyomu.js",

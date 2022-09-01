@@ -16,13 +16,18 @@ class UI
 	_translation = null;
 
 	/**
+	 *
+	 * @type {Translator}
+	 */
+	translator = new Translator();
+
+	/**
 	 * 
 	 * @param {string} domain 
 	 */
 	constructor(domain)
 	{
 		this.domain = domain;
-		this.translator = new Translator();
 		this._config = new Config();
 
 		/**
@@ -94,8 +99,10 @@ class UI
 	set config(config)
 	{
 		this._config = config;
-		this.translator.port = config.port;
-		this.translator.concurrentRequests = config.requests;
+		this.translator = config.mode === Config.MODE_SUGOI
+			? new TranslatorSugoi()
+			: new TranslatorDeepL(this.chromeApi);
+		this.translator.setConfig(config);
 		this.updateView();
 	}
 
@@ -161,7 +168,7 @@ class UI
 
 	createButtons()
 	{
-		this.proxy = this.translator.getProxy(this.domain);
+		this.proxy = Proxy.get(this.domain);
 		const enabled = (this.proxy != null) && this.proxy.allowed;
 		if (!enabled)
 		{

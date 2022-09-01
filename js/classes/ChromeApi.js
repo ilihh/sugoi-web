@@ -69,6 +69,15 @@ class ChromeApi
 	 */
 	async setConfig(config)
 	{
+		if (typeof config.requests === 'string')
+		{
+			config.requests = parseInt(config.requests);
+		}
+		if (typeof config.deepl_texts_per_request === 'string')
+		{
+			config.deepl_texts_per_request = parseInt(config.deepl_texts_per_request);
+		}
+
 		return this.storageSet({config: config});
 	}
 

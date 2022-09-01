@@ -2,6 +2,8 @@
 
 class Proxy
 {
+	static derived = new Set();
+
 	/**
 	 *
 	 * @type {TranslatorLine[]}
@@ -31,6 +33,36 @@ class Proxy
 	get lines()
 	{
 		return this._lines;
+	}
+
+	/**
+	 *
+	 * @param {string} domain
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	supported(domain)
+	{
+		return false;
+	}
+
+	/**
+	 *
+	 * @param domain
+	 * @returns {Proxy}
+	 */
+	static get(domain)
+	{
+		for (let cls of this.derived)
+		{
+			const proxy = new cls();
+			if (proxy.supported(domain))
+			{
+				return proxy;
+			}
+		}
+
+		return new ProxyUnavailable();
 	}
 
 	/**
