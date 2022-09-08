@@ -45,29 +45,18 @@ class TranslatorDeepL extends Translator
 	 */
 	async run(lines)
 	{
-		const request = [];
+		const filtered = lines.filter(x => x.needTranslate);
+		const total = filtered.length;
 
-		for (let i = 0; i < lines.length; i++)
+		this._triggerProgress(0, total);
+
+		for (let i = 0; i < total; i += this._texts_per_request)
 		{
-			const line = lines[i];
-			if (!line.needTranslate)
-			{
-				continue;
-			}
-
-			request.push(line);
-
-			if (request.length === this._texts_per_request)
-			{
-				await this._batchTranslate(request);
-				request.length = 0;
-			}
-		}
-
-		if (request.length > 0)
-		{
+			const end = Math.min(total, i + this._texts_per_request);
+			const request = filtered.slice(i, end);
 			await this._batchTranslate(request);
-			request.length = 0;
+
+			this._triggerProgress(end, total);
 		}
 	}
 
@@ -89,14 +78,13 @@ class TranslatorDeepL extends Translator
 			request.data.push(lines[i].original);
 		}
 
+		const r = this._chromeApi.send(request);
+
 		/**
 		 *
 		 * @type {string[]}
 		 */
-		const r = this._chromeApi.send(request);
-		console.log('r: ', r);
 		const response = await r;
-		console.log('response: ', response);
 
 		for (let i = 0; i < response.length; i++)
 		{

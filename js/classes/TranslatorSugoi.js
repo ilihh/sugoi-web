@@ -24,13 +24,6 @@ class TranslatorSugoi extends Translator
 	_concurrentRequests = 10;
 
 	/**
-	 *
-	 * @type {number}
-	 * @private
-	 */
-	_currentRequests = 0;
-
-	/**
 	 * @param {Config} config
 	 */
 	setConfig(config)
@@ -56,7 +49,7 @@ class TranslatorSugoi extends Translator
 	{
 		try
 		{
-			const response = await this._request('test');
+			await this._request('test');
 			return true;
 		}
 		catch (e)
@@ -70,69 +63,38 @@ class TranslatorSugoi extends Translator
 	/**
 	 *
 	 * @param {TranslatorLine[]} lines
-	 * @returns {Promise<void>}
+	 * @returns {Promise<Awaited<void>[]>}
 	 */
 	async run(lines)
 	{
-		let i = 0;
-		let promises;
+		const filtered = lines.filter(x => x.needTranslate);
+		const total = filtered.length;
 
-		[i, promises] = this._batchTranslate(i, lines);
+		this._triggerProgress(0, total);
 
-		const next = () => {
-			let next_promises;
-			[i, next_promises] = this._batchTranslate(i, lines);
-			const p = Promise.race(next_promises);
-
-			return i < lines.length ? p.then(next) : p;
-		};
-
-		return await Promise.race(promises).then(next);
-	}
-
-	/**
-	 *
-	 * @param {number} i
-	 * @param {TranslatorLine[]} lines
-	 * @returns [{number}, {Promise<void>[]]
-	 * @private
-	 */
-	_batchTranslate(i, lines)
-	{
 		/**
 		 *
 		 * @type {Promise<void>[]}
 		 */
-		const promises = [];
-		for (; i < lines.length; i++)
-		{
-			if (this._currentRequests === this._concurrentRequests)
-			{
-				break;
-			}
+		const requests = [];
+		let translated = 0;
 
-			if (lines[i].needTranslate)
+		const translate = async () => {
+			while (filtered.length > 0)
 			{
-				promises.push(this._translate(lines[i]));
+				const line = filtered.shift();
+				line.translation = await this._request(line.original);
+				translated += 1;
+				this._triggerProgress(translated, total);
 			}
+		};
+
+		for (let i = 0; i < this._concurrentRequests; i++)
+		{
+			requests.push(translate());
 		}
 
-		return [i, promises];
-	}
-
-	/**
-	 *
-	 * @param {TranslatorLine} line
-	 * @returns {Promise<void>}
-	 * @private
-	 */
-	async _translate(line)
-	{
-		this._currentRequests += 1;
-
-		line.translation = await this._request(line.original);
-
-		this._currentRequests -= 1;
+		return await Promise.all(requests);
 	}
 
 	/**

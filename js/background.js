@@ -198,7 +198,7 @@ async function processMessage(request, sender)
  * @param {MessageSender} sender
  * @param {function} sendResponse
  */
-async function processExternalMessage(request, sender, sendResponse)
+async function processExternalMessage(request, sender)
 {
 	const domain = sender.url ? (new URL(sender.url)).host : '';
 	const supported = is_supported(domain);
@@ -224,7 +224,7 @@ async function processExternalMessage(request, sender, sendResponse)
 			break;
 	}
 
-	sendResponse(response);
+	return response;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -232,4 +232,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	return true;
 });
 
-chrome.runtime.onMessageExternal.addListener(processExternalMessage);
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+	processExternalMessage(request, sender).then(sendResponse);
+	return true;
+});
