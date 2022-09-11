@@ -97,7 +97,15 @@ class UI
 			case 'translate':
 				if (this.proxy.allowed)
 				{
-					await (this._translation || this.translate());
+					if (this._translation != null)
+					{
+						await this._translation;
+					}
+					else
+					{
+						await this.translate();
+					}
+
 					response = true;
 				}
 				else
@@ -189,6 +197,10 @@ class UI
 		await this._translation;
 		this.proxy.validate();
 		this._translation = null;
+
+		// fix to prevent strange bug: lines translated, but other extensions get original version
+		// delay 500ms to prevent it
+		await Utilities.wait(500);
 	}
 
 	/**

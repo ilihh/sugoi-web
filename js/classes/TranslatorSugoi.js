@@ -63,7 +63,7 @@ class TranslatorSugoi extends Translator
 	/**
 	 *
 	 * @param {TranslatorLine[]} lines
-	 * @returns {Promise<Awaited<void>[]>}
+	 * @returns {Promise<void>}
 	 */
 	async run(lines)
 	{
@@ -94,7 +94,7 @@ class TranslatorSugoi extends Translator
 			requests.push(translate());
 		}
 
-		return await Promise.all(requests);
+		await Promise.all(requests);
 	}
 
 	/**

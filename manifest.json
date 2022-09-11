@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.0.6",
+	"version": "1.0.7",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -34,6 +34,7 @@
 		{
 			"js": [
 				"js/vendor/jquery-3.4.1.min.js",
+				"js/classes/Utilities.js",
 
 				"js/classes/Translator.js",
 				"js/classes/TranslatorSugoi.js",
