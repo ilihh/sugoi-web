@@ -7,7 +7,7 @@ class TranslatorSugoi extends Translator
 	 * @type {string}
 	 * @private
 	 */
-	_url = 'http://127.0.0.1';
+	_url = 'http://localhost';
 
 	/**
 	 *

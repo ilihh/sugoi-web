@@ -78,7 +78,10 @@ class ChromeApi
 			config.deepl_texts_per_request = parseInt(config.deepl_texts_per_request);
 		}
 
-		return this.storageSet({config: config});
+		// firefox workaround, otherwise saved empty object
+		const data = JSON.parse(JSON.stringify(config));
+
+		return this.storageSet({config: data});
 	}
 
 	/**

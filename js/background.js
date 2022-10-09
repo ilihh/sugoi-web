@@ -61,7 +61,6 @@ class DeepL
 			data += '&text=' + encodeURIComponent(lines[i]);
 		}
 
-		/*
 		const response = await fetch(this.url, {
 			method: 'POST',
 			body: data,
@@ -69,15 +68,6 @@ class DeepL
 				'Authorization': 'DeepL-Auth-Key ' + this._api_key,
 				'Content-Type': 'application/x-www-form-urlencoded',
 			}
-		});
-		*/
-		const response = await fetch('https://api-free.deepl.com/v2/translate', {
-			method: 'POST',
-			body: data,
-			headers: {
-				'Authorization': 'DeepL-Auth-Key 3e598917-623e-c1dc-1163-cad97a555430:fx',
-				'Content-Type': 'application/x-www-form-urlencoded',
-			},
 		});
 
 		const result = [];
@@ -101,7 +91,14 @@ class DeepL
 
 function button_toggle(tab_id, enable)
 {
-	chrome.action.enable(tab_id);
+	if (chrome.action)
+	{
+		chrome.action.enable(tab_id);
+	}
+	else
+	{
+		chrome.browserAction.enable(tab_id);
+	}
 	/*
 	chrome.action.setIcon({
 		path: enable ? 'images/icon32.png' : 'images/icon32_off.png'
@@ -227,12 +224,17 @@ async function processExternalMessage(request, sender)
 	return response;
 }
 
+function is_firefox()
+{
+	return typeof browser !== 'undefined';
+}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	processMessage(request, sender).then(sendResponse);
-	return true;
+	const promise = processMessage(request, sender).then(sendResponse);
+	return is_firefox ? promise : true;
 });
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-	processExternalMessage(request, sender).then(sendResponse);
-	return true;
+	const promise = processExternalMessage(request, sender).then(sendResponse);
+	return is_firefox ? promise : true;
 });

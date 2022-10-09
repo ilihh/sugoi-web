@@ -2,8 +2,7 @@
 	"name": "Sugoi Web Translation",
 	"version": "1.0.8",
 
-	"manifest_version": 3,
-	"incognito": "split",
+	"manifest_version": 2,
 
 	"description": "Sugoi/DeepL Web Translation",
 	"icons": {
@@ -12,7 +11,7 @@
 		"48": "images/s48.png"
 	},
 
-	"action": {
+	"browser_action": {
 		"default_icon": {
 			"32": "images/s32.png"
 		},
@@ -20,15 +19,16 @@
 		"default_popup": "popup/action.html"
 	},
 
-	"permissions": ["storage", "tabs"],
-	"background": {
-		"service_worker": "js/background.js"
-	},
-
-	"host_permissions": [
+	"permissions": [
+		"storage",
+		"tabs",
+		"http://localhost/*",
 		"https://api-free.deepl.com/v2/*",
 		"https://api.deepl.com/v2/*"
 	],
+	"background": {
+		"scripts": ["js/background.js"]
+	},
 
 	"content_scripts":[
 		{
