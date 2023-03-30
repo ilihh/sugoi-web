@@ -59,7 +59,8 @@ class ChromeApi
 	 */
 	async getConfig()
 	{
-		return this.storageGet('config');
+		const config = await this.storageGet('config');
+		return Object.assign(new Config(), config ?? {});
 	}
 
 	/**

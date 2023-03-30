@@ -10,7 +10,7 @@ class UI
 
 	/**
 	 *
-	 * @type {Promise<void>}
+	 * @type {Promise<Translation>|null}
 	 * @private
 	 */
 	_translation = null;
@@ -26,6 +26,8 @@ class UI
 	 * @private
 	 */
 	_deepl;
+
+	_translated = false;
 
 	/**
 	 *
@@ -80,14 +82,18 @@ class UI
 	 *
 	 * @param {any} request
 	 * @param {MessageSender} sender
+	 * @returns {Promise<boolean|Translation>}
 	 */
 	async _processMessage(request, sender)
 	{
 		if (sender.tab)
 		{
-			return;
+			return false;
 		}
 
+		/**
+		 * @var {boolean|Translation}
+		 */
 		let response;
 		switch (request.action)
 		{
@@ -97,16 +103,15 @@ class UI
 			case 'translate':
 				if (this.proxy.allowed)
 				{
-					if (this._translation != null)
+					if (this._translated)
 					{
-						await this._translation;
+						response = this.proxy.data();
 					}
 					else
 					{
-						await this.translate();
+						const promise = (this._translation != null) ? this._translation : this.translate();
+						response = await promise;
 					}
-
-					response = true;
 				}
 				else
 				{
@@ -141,7 +146,7 @@ class UI
 
 	async load()
 	{
-		this.config = (await this.chromeApi.getConfig()) ?? new Config();
+		this.config = await this.chromeApi.getConfig();
 	}
 
 	async updateView()
@@ -180,6 +185,9 @@ class UI
 		}
 	}
 
+	/**
+	 * @returns {Promise<Translation>}
+	 */
 	async translate()
 	{
 		this._buttonTranslate.style.display = 'none';
@@ -201,6 +209,10 @@ class UI
 		// fix to prevent strange bug: lines translated, but other extensions get original version
 		// delay 500ms to prevent it
 		await Utilities.wait(500);
+
+		this._translated = true;
+
+		return this.proxy.data();
 	}
 
 	/**

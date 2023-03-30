@@ -36,6 +36,10 @@
 				"js/vendor/jquery-3.4.1.min.js",
 				"js/classes/Utilities.js",
 
+				"js/classes/common/LineTypes.js",
+				"js/classes/common/Translation.js",
+				"js/classes/common/TranslationBlock.js",
+
 				"js/classes/Translator.js",
 				"js/classes/TranslatorSugoi.js",
 				"js/classes/TranslatorDeepL.js",

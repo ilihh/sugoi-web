@@ -67,9 +67,7 @@ class ActionPopup
 	 */
 	async _init()
 	{
-		const response = await this.chromeApi.getConfig();
-		this.config = Object.assign(new Config(), response ?? {});
-
+		this.config = await this.chromeApi.getConfig();
 		this.app = this._createApp();
 	}
 }

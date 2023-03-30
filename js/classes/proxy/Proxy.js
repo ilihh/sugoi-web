@@ -6,6 +6,15 @@ class Proxy
 
 	/**
 	 *
+	 * @type {number}
+	 */
+	get chapter()
+	{
+		return 0;
+	}
+
+	/**
+	 *
 	 * @type {TranslatorLine[]}
 	 * @private
 	 */
@@ -68,12 +77,13 @@ class Proxy
 	/**
 	 *
 	 * @param {HTMLElement} element
+	 * @param {string} type
 	 */
-	addLine(element)
+	addLine(element, type)
 	{
 		if (element)
 		{
-			this._lines.push(new TranslatorLine(element));
+			this._lines.push(new TranslatorLine(element, type));
 		}
 	}
 
@@ -106,8 +116,8 @@ class Proxy
 			const $content = $(this.content_selectors[i]);
 			if ($content.length > 0)
 			{
-				this.ReplaceEmoji($content);
-				this.ReplaceRuby($content);
+				this.replaceEmoji($content);
+				this.replaceRuby($content);
 			}
 		}
 	}
@@ -118,7 +128,7 @@ class Proxy
 	 * @param {string} chars
 	 * @returns {string}
 	 */
-	Trim(str, chars)
+	trim(str, chars)
 	{
 		let start = 0,
 			end = str.length;
@@ -140,7 +150,7 @@ class Proxy
 	 *
 	 * @param {jQuery} $content
 	 */
-	ReplaceEmoji($content)
+	replaceEmoji($content)
 	{
 		const $images = $content.find('img.emoji');
 		$images.each(function(index, elem){
@@ -155,7 +165,7 @@ class Proxy
 	 *
 	 * @param {jQuery} $content
 	 */
-	ReplaceRuby($content)
+	replaceRuby($content)
 	{
 		const $ruby = $content.find('ruby');
 		const self = this;
@@ -178,7 +188,7 @@ class Proxy
 			if ($rb.length > 0)
 			{
 				const rb = $rb.html()
-				let rt = self.Trim($rt.html(), '・');
+				let rt = self.trim($rt.html(), '・');
 				if (rt)
 				{
 					rt = ' (' + rt + ') ';
@@ -196,5 +206,28 @@ class Proxy
 				$e.replaceWith(rb + ' (' + rt + ')');
 			}
 		});
+	}
+
+	/**
+	 *
+	 * @param {function(TranslatorLine): boolean} predicate
+	 * @returns {TranslationBlock[]}
+	 * @private
+	 */
+	_filterLines(predicate)
+	{
+		return this.lines.filter(predicate).map(line => new TranslationBlock(line));
+	}
+
+	data()
+	{
+		const result = new Translation();
+		result.chapter = this.chapter;
+		result.title = new TranslationBlock(this.lines.find(line => line.type === LineTypes.title));
+		result.content = this._filterLines(line => LineTypes.isContent(line.type));
+		result.author_before = this._filterLines(line => line.type === LineTypes.author_before);
+		result.author_after = this._filterLines(line => line.type === LineTypes.author_after);
+
+		return result;
 	}
 }

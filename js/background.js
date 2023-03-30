@@ -209,7 +209,7 @@ async function processExternalMessage(request, sender)
 				response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'});
 				if (response)
 				{
-					await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
+					response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
 				}
 			}
 			break;

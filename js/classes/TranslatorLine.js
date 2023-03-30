@@ -5,12 +5,24 @@ class TranslatorLine
 	/**
 	 *
 	 * @param {HTMLElement} element
+	 * @param {string} type
 	 */
-	constructor(element)
+	constructor(element, type)
 	{
 		this.element = element;
-		this.original = element.innerHTML.trim() === '<br>' ? '.' : element.innerText.trim();
-		this._translation = this.needTranslate ? '' : this.original;
+		this.type = this.element.querySelector('img') ? LineTypes.image : type;
+
+		this._raw = (element.innerHTML.trim() === '<br>')
+			|| (this.type === LineTypes.image)
+			|| ['.', '', '「', '」', '・'].includes(element.innerText.trim());
+
+		this._translation = this._raw ? element.innerHTML : null;
+		this.original = this._raw ? element.innerHTML : element.innerText.trim();
+	}
+
+	get html()
+	{
+		return this._raw;
 	}
 
 	/**
@@ -19,7 +31,7 @@ class TranslatorLine
 	 */
 	get needTranslate()
 	{
-		return !['.', '', '「', '」', '・'].includes(this.original);
+		return !this._raw;
 	}
 
 	/**

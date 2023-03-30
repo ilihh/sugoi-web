@@ -35,15 +35,26 @@ class ProxyKakuyomu extends Proxy
 		return document.querySelector('.widget-episodeBody') != null;
 	}
 
+	get chapter()
+	{
+		const selected = document.querySelector('#contentAside-episodeInfo .contentAside-sectionBody .widget-toc-items .isHighlighted');
+		if (!selected)
+		{
+			return 0;
+		}
+
+		return [...selected.parentElement.children].indexOf(selected);
+	}
+
 	/**
 	 *
 	 * @override
 	 */
 	loadLines()
 	{
-		this.addLine(document.querySelector('#contentMain-header .widget-episodeTitle'));
+		this.addLine(document.querySelector('#contentMain-header .widget-episodeTitle'), LineTypes.title);
 
 		const content = document.querySelectorAll('.widget-episodeBody > p');
-		content.forEach(e => this.addLine(e));
+		content.forEach(e => this.addLine(e, LineTypes.content));
 	}
 }

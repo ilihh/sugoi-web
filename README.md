@@ -34,7 +34,7 @@ Messages should be sent from content scripts.
 	const can_translate = await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'canTranslate' });
 	if (can_translate)
 	{
-		await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'translate' });
+		const response = await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'translate' });
 	}
 
 **Notes:**
