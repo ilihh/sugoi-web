@@ -4,6 +4,8 @@ class Translation
 {
 	chapter = 0;
 
+	url = '';
+
 	/**
 	 *
 	 * @type {TranslationBlock}

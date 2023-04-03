@@ -10,7 +10,7 @@ class UI
 
 	/**
 	 *
-	 * @type {Promise<Translation>|null}
+	 * @type {Promise<Translation>|Promise<boolean>|null}
 	 * @private
 	 */
 	_translation = null;
@@ -82,7 +82,7 @@ class UI
 	 *
 	 * @param {any} request
 	 * @param {MessageSender} sender
-	 * @returns {Promise<boolean|Translation>}
+	 * @returns {Promise<boolean|Translation|TranslationInfo>}
 	 */
 	async _processMessage(request, sender)
 	{
@@ -92,7 +92,7 @@ class UI
 		}
 
 		/**
-		 * @var {boolean|Translation}
+		 * @var {boolean|Translation|TranslationInfo}
 		 */
 		let response;
 		switch (request.action)
@@ -100,18 +100,26 @@ class UI
 			case 'canTranslate':
 				response = this.proxy.allowed;
 				break;
+			case 'info':
+				response = new TranslationInfo(this.proxy.allowed, this.proxy.isMain, this.proxy.isChapter);
+				break;
+			case 'meta':
 			case 'translate':
 				if (this.proxy.allowed)
 				{
-					if (this._translated)
+					if (!this._translated)
 					{
-						response = this.proxy.data();
+						if (this._translation != null)
+						{
+							await this._translation;
+						}
+						else
+						{
+							await this.translate();
+						}
 					}
-					else
-					{
-						const promise = (this._translation != null) ? this._translation : this.translate();
-						response = await promise;
-					}
+
+					response = (request.action === 'translate') ? this.proxy.data() : this.proxy.meta();
 				}
 				else
 				{
@@ -119,7 +127,7 @@ class UI
 				}
 				break;
 			default:
-				response = null;
+				response = false;
 				break;
 		}
 
@@ -186,7 +194,7 @@ class UI
 	}
 
 	/**
-	 * @returns {Promise<Translation>}
+	 * @returns {Promise<Translation>|Promise<TranslationMeta>|Promise<boolean>}
 	 */
 	async translate()
 	{
@@ -197,7 +205,7 @@ class UI
 		{
 			alert('Sugoi Offline Translation Server is not available.\nProbably server not started or access blocked by AdBlock, Brave Shields, or other similar extensions.');
 			this._buttonTranslate.style.display = 'block';
-			return;
+			return false;
 		}
 
 		this.proxy.loadLines();
@@ -212,7 +220,7 @@ class UI
 
 		this._translated = true;
 
-		return this.proxy.data();
+		return true;
 	}
 
 	/**

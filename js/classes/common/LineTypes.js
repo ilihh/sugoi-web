@@ -7,6 +7,16 @@ class LineTypes
 		return 'title';
 	}
 
+	static get author()
+	{
+		return 'author';
+	}
+
+	static get introduction()
+	{
+		return 'introduction';
+	}
+
 	static get content()
 	{
 		return 'content';

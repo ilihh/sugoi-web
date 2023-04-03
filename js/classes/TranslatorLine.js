@@ -17,12 +17,12 @@ class TranslatorLine
 			|| ['.', '', '「', '」', '・'].includes(element.innerText.trim());
 
 		this._translation = this._raw ? element.innerHTML : null;
-		this.original = this._raw ? element.innerHTML : element.innerText.trim();
+		this.original = (this._raw || (this.type === LineTypes.introduction)) ? element.innerHTML : element.innerText.trim();
 	}
 
 	get html()
 	{
-		return this._raw;
+		return (this._raw) || (this.type === LineTypes.introduction);
 	}
 
 	/**

@@ -39,6 +39,8 @@
 				"js/classes/common/LineTypes.js",
 				"js/classes/common/Translation.js",
 				"js/classes/common/TranslationBlock.js",
+				"js/classes/common/TranslationInfo.js",
+				"js/classes/common/TranslationMeta.js",
 
 				"js/classes/Translator.js",
 				"js/classes/TranslatorSugoi.js",

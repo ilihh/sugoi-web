@@ -118,6 +118,11 @@ class TranslatorSugoi extends Translator
 			}
 		});
 
+		if (!response.ok)
+		{
+			console.error(data, response);
+		}
+
 		return await response.json();
 	}
 }

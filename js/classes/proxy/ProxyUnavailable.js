@@ -10,4 +10,22 @@ class ProxyUnavailable extends Proxy
 	{
 		return false;
 	}
+
+	/**
+	 * @returns {boolean}
+	 * @override
+	 */
+	get isMain()
+	{
+		return false;
+	}
+
+	/**
+	 * @returns {boolean}
+	 * @override
+	 */
+	get isChapter()
+	{
+		return false;
+	}
 }

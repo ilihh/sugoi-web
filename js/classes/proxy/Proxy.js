@@ -6,15 +6,6 @@ class Proxy
 
 	/**
 	 *
-	 * @type {number}
-	 */
-	get chapter()
-	{
-		return 0;
-	}
-
-	/**
-	 *
 	 * @type {TranslatorLine[]}
 	 * @private
 	 */
@@ -32,7 +23,43 @@ class Proxy
 	 */
 	get allowed()
 	{
+		return this.isMain || this.isChapter;
+	}
+
+	/**
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	get isMain()
+	{
 		return false;
+	}
+
+	/**
+	 * @abstract
+	 * @returns {boolean}
+	 */
+	get isChapter()
+	{
+		return false;
+	}
+
+	/**
+	 *
+	 * @type {number}
+	 */
+	get chapter()
+	{
+		return 0;
+	}
+
+	/**
+	 *
+	 * @type {number}
+	 */
+	get chapters()
+	{
+		return 0;
 	}
 
 	/**
@@ -219,14 +246,50 @@ class Proxy
 		return this.lines.filter(predicate).map(line => new TranslationBlock(line));
 	}
 
+	/**
+	 *
+	 * @param {string} type
+	 * @return {TranslationBlock|null}
+	 * @private
+	 */
+	_findLine(type)
+	{
+		const line = this.lines.find(line => line.type === type);
+		if (typeof line === 'undefined')
+		{
+			return null;
+		}
+
+		return new TranslationBlock(line);
+	}
+
+	/**
+	 *
+	 * @returns {Translation}
+	 */
 	data()
 	{
 		const result = new Translation();
+		result.url = document.location.toString();
 		result.chapter = this.chapter;
-		result.title = new TranslationBlock(this.lines.find(line => line.type === LineTypes.title));
+		result.title = this._findLine(LineTypes.title);
 		result.content = this._filterLines(line => LineTypes.isContent(line.type));
 		result.author_before = this._filterLines(line => line.type === LineTypes.author_before);
 		result.author_after = this._filterLines(line => line.type === LineTypes.author_after);
+
+		return result;
+	}
+
+	meta()
+	{
+		const result = new TranslationMeta();
+		result.url = document.location.toString();
+		result.chapters = this.chapters;
+		result.title = this._findLine(LineTypes.title);
+		result.title.eng = this.trim(result.title.eng.trim(), '.')
+
+		result.author = this._findLine(LineTypes.author);
+		result.introduction = this._findLine(LineTypes.introduction);
 
 		return result;
 	}

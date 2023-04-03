@@ -203,15 +203,19 @@ async function processExternalMessage(request, sender)
 	let response;
 	switch (request.action)
 	{
+		case 'meta':
 		case 'translate':
 			if (supported)
 			{
 				response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'});
 				if (response)
 				{
-					response = await chrome.tabs.sendMessage(sender.tab.id, {action: 'translate'});
+					response = await chrome.tabs.sendMessage(sender.tab.id, {action: request.action});
 				}
 			}
+			break;
+		case 'info':
+			response = supported && (await chrome.tabs.sendMessage(sender.tab.id, {action: 'info'}));
 			break;
 		case 'canTranslate':
 			response = supported && (await chrome.tabs.sendMessage(sender.tab.id, {action: 'canTranslate'}));
