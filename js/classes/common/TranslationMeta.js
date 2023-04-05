@@ -6,6 +6,8 @@ class TranslationMeta
 
 	url = '';
 
+	filename = '';
+
 	/**
 	 *
 	 * @type {TranslationBlock}

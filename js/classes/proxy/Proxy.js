@@ -287,9 +287,18 @@ class Proxy
 		result.chapters = this.chapters;
 		result.title = this._findLine(LineTypes.title);
 		result.title.eng = this.trim(result.title.eng.trim(), '.')
+		result.filename = result.title.eng;
 
 		result.author = this._findLine(LineTypes.author);
 		result.introduction = this._findLine(LineTypes.introduction);
+		if (result.introduction == null)
+		{
+			result.introduction = {
+				jpn: '',
+				eng: '',
+				html: false,
+			}
+		}
 
 		return result;
 	}
