@@ -160,17 +160,18 @@ class Proxy
 		let start = 0,
 			end = str.length;
 
-		while(start < end && chars.indexOf(str[start]) >= 0)
+		while (start < end && chars.indexOf(str[start]) >= 0)
 		{
 			++start;
 		}
 
-		while(end > start && chars.indexOf(str[end - 1]) >= 0)
+		while (end > start && chars.indexOf(str[end - 1]) >= 0)
 		{
 			--end;
 		}
 
-		return (start > 0 || end < str.length) ? str.substring(start, end) : str;
+		return (start > 0 || end < str.length
+		) ? str.substring(start, end) : str;
 	}
 
 	/**
@@ -180,7 +181,7 @@ class Proxy
 	replaceEmoji($content)
 	{
 		const $images = $content.find('img.emoji');
-		$images.each(function(index, elem){
+		$images.each(function (index, elem) {
 			const $e = $(elem);
 			const span = '<span>' + $e.attr('alt') + '</span>';
 			$e.after(span);
@@ -196,7 +197,7 @@ class Proxy
 	{
 		const $ruby = $content.find('ruby');
 		const self = this;
-		$ruby.each(function(index, elem){
+		$ruby.each(function (index, elem) {
 			const $e = $(elem);
 			if ($e.html() === '')
 			{
@@ -206,7 +207,9 @@ class Proxy
 
 			const $rb = $e.find('rb');
 			const $rt = $e.find('rt');
-			if (($rb.length === 0) && ($rt.length === 0))
+			if (($rb.length === 0
+			) && ($rt.length === 0
+			))
 			{
 				$e.replaceWith($e.html());
 				return;
@@ -287,7 +290,7 @@ class Proxy
 		result.chapters = this.chapters;
 		result.title = this._findLine(LineTypes.title);
 		result.title.eng = this.trim(result.title.eng.trim(), '.')
-		result.filename = result.title.eng;
+		result.filename = this._name2filename(result.title.eng);
 
 		result.author = this._findLine(LineTypes.author);
 		result.introduction = this._findLine(LineTypes.introduction);
@@ -301,5 +304,41 @@ class Proxy
 		}
 
 		return result;
+	}
+
+	/**+
+	 *
+	 * @param {string} name
+	 * @return {string}
+	 * @private
+	 */
+	_name2filename(name)
+	{
+		name = name.replaceAll('<unk>', '.')
+
+		const symbols = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', ];
+		symbols.forEach(x => name = name.replaceAll(x, ''));
+
+		return this._trim(name, ' .');
+	}
+
+	_trim(str, characters)
+	{
+		str = str.trim();
+
+		let start = 0;
+		let end = str.length;
+
+		while (start < end && characters.includes(str[start]))
+		{
+			start += 1;
+		}
+
+		while (end > start && characters.includes(str[end - 1]))
+		{
+			end -= 1;
+		}
+
+		return (start > 0 || end < str.length) ? str.substring(start, end) : str;
 	}
 }
