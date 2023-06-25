@@ -71,6 +71,17 @@ class Proxy
 		return this._lines;
 	}
 
+	get translationInfo()
+	{
+		return new TranslationInfo(this.allowed, this.isMain, this.isChapter, this.googleTranslated);
+	}
+
+	get googleTranslated()
+	{
+		const html = document.querySelector('html');
+		return (html.lang === 'en') && html.classList.contains('translated-ltr')
+	}
+
 	/**
 	 *
 	 * @param {string} domain
@@ -319,7 +330,7 @@ class Proxy
 		const symbols = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', ];
 		symbols.forEach(x => name = name.replaceAll(x, ''));
 
-		return this._trim(name, ' .');
+		return this._trim(name, ' .~');
 	}
 
 	_trim(str, characters)

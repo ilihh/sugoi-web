@@ -2,6 +2,8 @@
 
 class TranslationMeta
 {
+	start = 1;
+
 	chapters = 0;
 
 	url = '';

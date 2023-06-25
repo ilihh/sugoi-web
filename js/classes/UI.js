@@ -101,7 +101,7 @@ class UI
 				response = this.proxy.allowed;
 				break;
 			case 'info':
-				response = new TranslationInfo(this.proxy.allowed, this.proxy.isMain, this.proxy.isChapter);
+				response = this.proxy.translationInfo;
 				break;
 			case 'meta':
 			case 'translate':
@@ -198,6 +198,12 @@ class UI
 	 */
 	async translate()
 	{
+		if (this.proxy.googleTranslated)
+		{
+			alert('Browser built-in translation enabled. Disable it to translate.')
+			return false;
+		}
+
 		this._buttonTranslate.style.display = 'none';
 
 		const enabled = await this.translator.serverAvailable();
