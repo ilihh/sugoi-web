@@ -62,6 +62,26 @@ class TranslatorDeepL extends Translator
 
 	/**
 	 *
+	 * @param {string} jpn
+	 * @return {Promise<string>}
+	 */
+	async translate(jpn)
+	{
+		const request = {
+			'action': 'deepl',
+			'data': [jpn, ],
+		};
+
+		/**
+		 *
+		 * @type {string[]}
+		 */
+		const response = await this._chromeApi.send(request);
+		return response[0];
+	}
+
+	/**
+	 *
 	 * @param {TranslatorLine[]} lines
 	 * @returns {Promise<void>}
 	 * @private

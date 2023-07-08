@@ -134,6 +134,10 @@ class UI
 		return response;
 	}
 
+	/**
+	 *
+	 * @return {Config}
+	 */
 	get config()
 	{
 		return this._config;

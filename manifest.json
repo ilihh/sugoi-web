@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.0.9",
+	"version": "1.1.0",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -21,6 +21,7 @@
 	},
 
 	"permissions": ["storage", "tabs"],
+	"options_page": "page/options.html",
 	"background": {
 		"service_worker": "js/background.js"
 	},

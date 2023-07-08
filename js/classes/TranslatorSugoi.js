@@ -49,7 +49,7 @@ class TranslatorSugoi extends Translator
 	{
 		try
 		{
-			await this._request('test');
+			await this._request('test', 10000);
 			return true;
 		}
 		catch (e)
@@ -100,27 +100,54 @@ class TranslatorSugoi extends Translator
 	/**
 	 *
 	 * @param {string} jpn
+	 * @return {Promise<string>}
+	 */
+	async translate(jpn)
+	{
+		return await this._request(jpn)
+	}
+
+	/**
+	 *
+	 * @param {string} jpn
+	 * @param {number} timeout milliseconds
 	 * @returns {Promise<string>}
 	 * @private
 	 */
-	async _request(jpn)
+	async _request(jpn, timeout = 0)
 	{
 		const data = {
 			message: 'translate sentences',
 			content: jpn
 		};
 
-		const response = await fetch(this.url, {
+		const body = JSON.stringify(data);
+		const options = {
 			method: 'POST',
-			body: JSON.stringify(data),
+			body: body,
 			headers: {
 				'Content-Type': 'application/json'
 			}
-		});
+		};
+
+		let timeout_id = 0;
+		if (timeout > 0)
+		{
+			const controller = new AbortController();
+			timeout_id = setTimeout(() => controller.abort(), timeout)
+			options.signal = controller.signal;
+		}
+
+		const response = await fetch(this.url, options);
+		if (timeout_id)
+		{
+			clearTimeout(timeout_id);
+		}
 
 		if (!response.ok)
 		{
-			console.error(data, response);
+			console.error(body, JSON.stringify(response), await response.text());
+			return jpn;
 		}
 
 		return await response.json();

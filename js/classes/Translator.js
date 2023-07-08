@@ -74,4 +74,15 @@ class Translator
 	async run(lines)
 	{
 	}
+
+
+	/**
+	 *
+	 * @abstract
+	 * @param {string} jpn
+	 * @return {Promise<string>}
+	 */
+	async translate(jpn)
+	{
+	}
 }
