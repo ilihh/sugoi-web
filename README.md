@@ -21,11 +21,6 @@ Extension for Chromium-based browsers and Firefox to translate Japanese web nove
 2. Run *activateOfflineTranslationServer.bat* to start server.
 3. Now **Translate** button is works
 
-**Recommended to update server to correctly translate long lines:**
-1. Download the *server* archive from Releases
-2. Unpack the archive
-3. Copy files with overwrite to *backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation / fairseq*
-
 **Cross-extension messaging**
 
 Messages should be sent from content scripts.
