@@ -109,6 +109,7 @@ class ProxyPixiv extends Proxy
 	 */
 	loadLines()
 	{
+		this._lines.length = 0;
 		this.addLine(document.querySelector('h1'), LineTypes.title);
 
 		const info = document.querySelector('[id^="expandable-paragraph"]');
@@ -133,7 +134,7 @@ class ProxyPixiv extends Proxy
 
 		if (this.isChapter)
 		{
-			const content = document.querySelectorAll('span.text-count');
+			const content = document.querySelectorAll('main span.text-count');
 			content.forEach(e => this.addLine(e, LineTypes.content));
 		}
 	}

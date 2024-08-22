@@ -45,6 +45,9 @@ class TranslatorDeepL extends Translator
 	 */
 	async run(lines)
 	{
+		this._abort = new AbortController();
+		const signal = this._abort.signal;
+
 		const filtered = lines.filter(x => x.needTranslate);
 		const total = filtered.length;
 
@@ -52,6 +55,11 @@ class TranslatorDeepL extends Translator
 
 		for (let i = 0; i < total; i += this._texts_per_request)
 		{
+			if (signal.aborted)
+			{
+				return;
+			}
+
 			const end = Math.min(total, i + this._texts_per_request);
 			const request = filtered.slice(i, end);
 			await this._batchTranslate(request);

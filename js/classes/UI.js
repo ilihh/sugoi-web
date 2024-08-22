@@ -29,6 +29,8 @@ class UI
 
 	_translated = false;
 
+	_url = '';
+
 	/**
 	 *
 	 * @type {Translator}
@@ -63,19 +65,23 @@ class UI
 
 		this.chromeApi = new ChromeApi();
 
+		this._createTranslators();
+
+		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+			this._processMessage(request, sender).then(sendResponse);
+			return true;
+		});
+	}
+
+	_createTranslators()
+	{
 		this._sugoi = new TranslatorSugoi();
 		this._sugoi.onProgress((translated, total) => this._updateProgress(translated, total));
 
 		this._deepl = new TranslatorDeepL(this.chromeApi);
 		this._deepl.onProgress((translated, total) => this._updateProgress(translated, total));
 
-		this.chromeApi.onStorageChanged(changes => this.config = changes['config'].newValue);
-		this.load();
-
-		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-			this._processMessage(request, sender).then(sendResponse);
-			return true;
-		});
+		const _ = this.load();
 	}
 
 	/**
@@ -241,6 +247,11 @@ class UI
 	 */
 	_updateProgress(translated, total)
 	{
+		if (this.translator.isCanceled)
+		{
+			return;
+		}
+
 		$(this._uiProgress).css({
 			display: 'block',
 		}).html(translated + ' / ' + total);
@@ -293,6 +304,23 @@ class UI
 		}).html('TRANSLATE');
 
 		$btn_translate.on('click', () => this.translate());
+
+		this._url = document.location.toString();
+
+		setInterval(() => this._checkUrl(), 200);
+	}
+
+	_checkUrl()
+	{
+		if (document.location.toString() !== this._url)
+		{
+			this.translator.cancel();
+			this._createTranslators();
+
+			this._url = document.location.toString();
+			this._buttonTranslate.style.display = 'block';
+			this._uiProgress.style.display = 'none';
+		}
 	}
 
 	processResponse(response)

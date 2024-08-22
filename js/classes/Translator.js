@@ -17,6 +17,17 @@ class Translator
 	_statusListeners = [];
 
 	/**
+	 * @type {AbortController}
+	 * @private
+	 */
+	_abort = null;
+
+	get isCanceled()
+	{
+		return this._abort?.signal.aborted ?? true;
+	}
+
+	/**
 	 *
 	 * @param {statusCallback} callback
 	 */
@@ -75,7 +86,6 @@ class Translator
 	{
 	}
 
-
 	/**
 	 *
 	 * @abstract
@@ -84,5 +94,11 @@ class Translator
 	 */
 	async translate(jpn)
 	{
+	}
+
+	cancel()
+	{
+		this._abort?.abort();
+		this._statusListeners.length = 0;
 	}
 }
