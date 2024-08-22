@@ -4,9 +4,9 @@ Extension for Chromium-based browsers and Firefox to translate Japanese web nove
 **Installation for Chromium-based browsers:**
 1. Download the *Source code (zip)* archive from Releases
 2. Unpack the archive
-3. Open extensions page (*chrome://extensions/*)
+3. Open the extensions page (*chrome://extensions/*)
 4. Enable **Developer Mode**
-5. Press "Load Unpacked" button and select folder with *manifest.json*
+5. Press the "Load Unpacked" button and select a folder with *manifest.json*
 
 **Installation for Firefox:**
 1. Download the *Source code (zip)* archive from Releases
@@ -14,17 +14,12 @@ Extension for Chromium-based browsers and Firefox to translate Japanese web nove
 3. Delete *manifest.json*
 4. Rename *manifest-firefox.json* to *manifest.json*
 5. Open extensions page (*about:debugging#/runtime/this-firefox*)
-6. Press "Load Temporary Add-on" button and select *manifest.json*
+6. Press the "Load Temporary Add-on" button and select *manifest.json*
 
 **Using with Sugoi:**
 1. Open *{Sugoi folder} / backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation*
 2. Run *activateOfflineTranslationServer.bat* to start server.
-3. Now **Translate** button is works
-
-**Recommended to update server to correctly translate long lines:**
-1. Download the *server* archive from Releases
-2. Unpack the archive
-3. Copy files with overwrite to *backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation / fairseq*
+3. Now **Translate** button can be used
 
 **Cross-extension messaging**
 
