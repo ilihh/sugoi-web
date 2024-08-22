@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.1.0",
+	"version": "1.2.0",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -51,6 +51,7 @@
 				"js/classes/proxy/Proxy.js",
 				"js/classes/proxy/ProxySyosetu.js",
 				"js/classes/proxy/ProxyKakuyomu.js",
+				"js/classes/proxy/ProxyPixiv.js",
 				"js/classes/proxy/ProxyUnavailable.js",
 
 				"js/classes/ChromeApi.js",
@@ -63,7 +64,9 @@
 				"*://*.syosetu.com/*",
 				"*://syosetu.com/*",
 				"*://*.kakuyomu.jp/*",
-				"*://kakuyomu.jp/*"
+				"*://kakuyomu.jp/*",
+				"*://pixiv.net/novel/*",
+				"*://*.pixiv.net/novel/*"
 			],
 			"run_at": "document_end",
 			"all_frames": true

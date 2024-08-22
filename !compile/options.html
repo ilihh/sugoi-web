@@ -7,14 +7,38 @@
 </head>
 <body style="width: 400px;">
 	<div id="app">
-		<div>Japanese:</div>
-		<textarea v-model.trim="text_original"></textarea>
-		<div class="buttons">
-			<button type="button" v-on:click="translate">Translate</button>
-			<button type="button" v-on:click="clear">Clear</button>
+		<div class="server-settings">
+			<h2>Server Settings</h2>
+			<div><b>Current Key:</b>
+				<input type="text" ref="key" v-bind:value="server.key">
+				<button type="button" v-on:click="server.setKey($refs.key.value)">Change</button>
+			</div>
+			<h4>Keys:</h4>
+			<ul>
+				<li v-for="key in server.keys" :key="key">
+					{{ key }}
+					<button type="button" v-on:click="server.setKey(key)">Current</button>
+				</li>
+			</ul>
+			<div class="buttons">
+				<button type="button" v-on:click="server.refresh()">Refresh</button>
+				<button type="button" v-on:click="server.reload()">Reload Names</button>
+				<button type="button" v-on:click="server.save()">Save Cache</button>
+				<button type="button" v-on:click="server.shutdown()">Shutdown</button>
+			</div>
 		</div>
-		<div>{{ mode }}:</div>
-		<textarea v-model.trim="text_translated"></textarea>
+
+		<div class="translation">
+			<h2>Translation</h2>
+			<div>Japanese:</div>
+			<textarea v-model.trim="text_original"></textarea>
+			<div class="buttons">
+				<button type="button" v-on:click="translate">Translate</button>
+				<button type="button" v-on:click="clear">Clear</button>
+			</div>
+			<div>{{ mode }}:</div>
+			<textarea v-model.trim="text_translated"></textarea>
+		</div>
 	</div>
 
 	<textarea id="output" style="width: 100%; height: 500px;">

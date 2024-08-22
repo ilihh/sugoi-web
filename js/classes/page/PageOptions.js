@@ -21,6 +21,7 @@ class PageOptions
 		this._sugoi = new TranslatorSugoi();
 		this._deepl = new TranslatorDeepL(this.chromeApi);
 		this._config = new Config();
+		this._server = new SugoiServer(this._sugoi.url);
 
 		this.viewRender = viewRender;
 		const _ = this._init();
@@ -42,6 +43,11 @@ class PageOptions
 		return this._config;
 	}
 
+	get server()
+	{
+		return this._server;
+	}
+
 	/**
 	 *
 	 * @param {Config} config
@@ -51,6 +57,7 @@ class PageOptions
 		this._config = config;
 		this._sugoi.setConfig(config);
 		this._deepl.setConfig(config);
+		this._server.url = this._sugoi.url;
 
 		if (this.app)
 		{
@@ -73,6 +80,7 @@ class PageOptions
 				mode: 'Sugoi',
 				text_original: '',
 				text_translated: '',
+				server: page.server,
 			},
 			methods: {
 				async translate()

@@ -37,8 +37,10 @@ Messages should be sent from content scripts.
 		const response = await chrome.runtime.sendMessage(sugoiWebExtenstionId, { action: 'translate' });
 	}
 
-**Notes:**
-* For now supported only syosetu.com and kakuyomu.jp.
+**Supported:**
+* syosetu.com
+* kakuyomu.jp
+* pixiv.net/novel
 
 **Known Problems:**
 

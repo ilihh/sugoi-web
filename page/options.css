@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	padding: 10px;
+	font-size: 12px;
 }
 
 main {
@@ -13,7 +14,30 @@ textarea {
 	box-sizing: border-box;
 }
 
-.buttons {
+.server-settings {
+	margin-bottom: 50px;
+}
+
+.server-settings ul {
+	padding: 0;
+	list-style-position: inside;
+}
+
+.server-settings ul li {
+	margin-bottom: 5px;
+}
+
+.server-settings ul li button {
+	margin-left: 10px;
+}
+
+.server-settings .buttons {
+	display: flex;
+	justify-content: flex-start;
+	gap: 10px;
+}
+
+.translation .buttons {
 	display: flex;
 	justify-content: flex-end;
 	gap: 10px;
