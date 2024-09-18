@@ -14,7 +14,6 @@ class TranslatorLine
 
 		this._raw = (element.innerHTML.trim() === '<br>')
 			|| (this.type === LineTypes.image)
-			|| element.innerHTML.toLowerCase().includes('<br>')
 			|| ['.', '', '「', '」', '・'].includes(element.innerText.trim());
 
 		this._translation = this._raw ? element.innerHTML : null;

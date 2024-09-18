@@ -11,7 +11,11 @@ class ProxySyosetu extends Proxy
 	{
 		super();
 
-		this.content_selectors = ['#novel_p', '#novel_honbun', '#novel_a', ];
+		this.content_selectors = [
+			'article.p-novel .p-novel__body .js-novel-text.p-novel__text',
+			'article.p-novel.p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface',
+			'article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--afterword',
+		];
 	}
 
 	/**
@@ -32,9 +36,14 @@ class ProxySyosetu extends Proxy
 	 */
 	get isMain()
 	{
-		const has_title = document.querySelector('#novel_contents p.novel_title') != null;
-		const has_menu = document.querySelector('#novel_contents .index_box') != null;
-		return has_title && (has_menu || this.chapter === 0);
+		const has_introduction = document.querySelector('#novel_ex') != null;
+		if (has_introduction)
+		{
+			return true;
+		}
+
+		const has_menu = document.querySelector('article.p-novel .p-eplist') != null;
+		return has_menu || this.chapter === 0;
 	}
 
 	/**
@@ -44,7 +53,7 @@ class ProxySyosetu extends Proxy
 	 */
 	get isChapter()
 	{
-		return document.querySelector('#novel_honbun') != null;
+		return document.querySelector('article.p-novel h1.p-novel__title.p-novel__title--rensai') != null;
 	}
 
 	/**
@@ -54,7 +63,7 @@ class ProxySyosetu extends Proxy
 	 */
 	get chapter()
 	{
-		const chapters = document.querySelector('#novel_no');
+		const chapters = document.querySelector('article.p-novel .p-novel__number.js-siori');
 		if (chapters == null)
 		{
 			return 0;
@@ -72,10 +81,10 @@ class ProxySyosetu extends Proxy
 	{
 		if (this.isMain)
 		{
-			return document.querySelectorAll('#novel_contents .index_box a').length;
+			return document.querySelectorAll('article.p-novel .p-eplist a').length;
 		}
 
-		const chapters = document.querySelector('#novel_no');
+		const chapters = document.querySelector('article.p-novel .p-novel__number.js-siori');
 		if (chapters == null)
 		{
 			return 0;
@@ -87,7 +96,7 @@ class ProxySyosetu extends Proxy
 
 	loadAuthor()
 	{
-		const block = document.querySelector('.novel_writername')
+		const block = document.querySelector('article.p-novel .p-novel__author')
 		if (block == null)
 		{
 			return;
@@ -110,8 +119,8 @@ class ProxySyosetu extends Proxy
 	 */
 	loadLines()
 	{
-		this.addLine(document.querySelector('#novel_contents p.novel_title'), LineTypes.title);
-		this.addLine(document.querySelector('#novel_contents p.novel_subtitle'), LineTypes.title);
+		this.addLine(document.querySelector('article.p-novel h1.p-novel__title'), LineTypes.title);
+		//this.addLine(document.querySelector('#novel_contents p.novel_subtitle'), LineTypes.title);
 
 		// can be main and chapter at same time if only one chapter
 		if (this.isMain)
@@ -129,13 +138,13 @@ class ProxySyosetu extends Proxy
 
 		if (this.isChapter)
 		{
-			const before = document.querySelectorAll('#novel_p > p');
+			const before = document.querySelectorAll('article.p-novel.p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface > p');
 			before.forEach(e => this.addLine(e, LineTypes.author_before));
 
-			const content = document.querySelectorAll('#novel_honbun > p');
+			const content = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text > p');
 			content.forEach(e => this.addLine(e, LineTypes.content));
 
-			const after = document.querySelectorAll('#novel_a > p');
+			const after = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--afterword > p');
 			after.forEach(e => this.addLine(e, LineTypes.author_after));
 		}
 	}
