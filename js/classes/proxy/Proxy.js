@@ -147,6 +147,19 @@ class Proxy
 		return invalid.length === 0;
 	}
 
+	hasContent()
+	{
+		for (let selector of this.content_selectors)
+		{
+			if (document.querySelectorAll(selector).length > 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	fixContent()
 	{
 		for (let i = 0; i < this.content_selectors.length; i++)

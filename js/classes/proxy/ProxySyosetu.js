@@ -13,7 +13,7 @@ class ProxySyosetu extends Proxy
 
 		this.content_selectors = [
 			'article.p-novel .p-novel__body .js-novel-text.p-novel__text',
-			'article.p-novel.p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface',
+			'article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface',
 			'article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--afterword',
 		];
 	}
@@ -53,7 +53,7 @@ class ProxySyosetu extends Proxy
 	 */
 	get isChapter()
 	{
-		return document.querySelector('article.p-novel h1.p-novel__title.p-novel__title--rensai') != null;
+		return this.hasContent();
 	}
 
 	/**
