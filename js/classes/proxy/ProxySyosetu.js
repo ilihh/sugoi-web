@@ -138,10 +138,10 @@ class ProxySyosetu extends Proxy
 
 		if (this.isChapter)
 		{
-			const before = document.querySelectorAll('article.p-novel.p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface > p');
+			const before = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--preface > p');
 			before.forEach(e => this.addLine(e, LineTypes.author_before));
 
-			const content = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text > p');
+			const content = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text:not(.p-novel__text.p-novel__text--preface,.p-novel__text.p-novel__text--afterword) > p');
 			content.forEach(e => this.addLine(e, LineTypes.content));
 
 			const after = document.querySelectorAll('article.p-novel .p-novel__body .js-novel-text.p-novel__text.p-novel__text--afterword > p');
