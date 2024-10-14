@@ -50,6 +50,7 @@
 
 				"js/classes/proxy/Proxy.js",
 				"js/classes/proxy/ProxySyosetu.js",
+				"js/classes/proxy/ProxySyosetuOrg.js",
 				"js/classes/proxy/ProxyKakuyomu.js",
 				"js/classes/proxy/ProxyPixiv.js",
 				"js/classes/proxy/ProxyUnavailable.js",
@@ -63,6 +64,7 @@
 			"matches": [
 				"*://*.syosetu.com/*",
 				"*://syosetu.com/*",
+				"*://syosetu.org/*",
 				"*://*.kakuyomu.jp/*",
 				"*://kakuyomu.jp/*",
 				"*://pixiv.net/novel/*",

@@ -116,6 +116,7 @@ function is_supported(domain)
 {
 	const domains = {
 		'.syosetu.com': true,
+		'syosetu.org': true,
 		'kakuyomu.jp': true,
 		'.kakuyomu.jp': true,
 	};
