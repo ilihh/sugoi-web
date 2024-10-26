@@ -100,7 +100,7 @@ class Proxy
 	 */
 	static get(domain)
 	{
-		for (let cls of this.derived)
+		for (const cls of this.derived)
 		{
 			const proxy = new cls();
 			if (proxy.supported(domain))
@@ -149,7 +149,7 @@ class Proxy
 
 	hasContent()
 	{
-		for (let selector of this.content_selectors)
+		for (const selector of this.content_selectors)
 		{
 			if (document.querySelectorAll(selector).length > 0)
 			{
@@ -162,13 +162,13 @@ class Proxy
 
 	fixContent()
 	{
-		for (let i = 0; i < this.content_selectors.length; i++)
+		for (const selector of this.content_selectors)
 		{
-			const $content = $(this.content_selectors[i]);
-			if ($content.length > 0)
+			const elements = document.querySelectorAll(selector);
+			for (const element of elements)
 			{
-				this.replaceEmoji($content);
-				this.replaceRuby($content);
+				this.replaceEmoji(element);
+				this._replaceRubyAll(element);
 			}
 		}
 	}
@@ -181,8 +181,7 @@ class Proxy
 	 */
 	trim(str, chars)
 	{
-		let start = 0,
-			end = str.length;
+		let start = 0, end = str.length;
 
 		while (start < end && chars.indexOf(str[start]) >= 0)
 		{
@@ -194,72 +193,85 @@ class Proxy
 			--end;
 		}
 
-		return (start > 0 || end < str.length
-		) ? str.substring(start, end) : str;
+		return (start > 0 || end < str.length) ? str.substring(start, end) : str;
 	}
 
 	/**
 	 *
-	 * @param {jQuery} $content
+	 * @param {HTMLElement} element
 	 */
-	replaceEmoji($content)
+	replaceEmoji(element)
 	{
-		const $images = $content.find('img.emoji');
-		$images.each(function (index, elem) {
-			const $e = $(elem);
-			const span = '<span>' + $e.attr('alt') + '</span>';
-			$e.after(span);
-			$e.remove();
-		});
+		const images = element.querySelectorAll('img.emoji[alt]');
+		for (const img of images)
+		{
+			img.after(img.attributes.getNamedItem('alt').value);
+			img.remove();
+		}
 	}
 
 	/**
 	 *
-	 * @param {jQuery} $content
+	 * @param {HTMLElement} element
+	 * @private
 	 */
-	replaceRuby($content)
+	_replaceRubyAll(element)
 	{
-		const $ruby = $content.find('ruby');
-		const self = this;
-		$ruby.each(function (index, elem) {
-			const $e = $(elem);
-			if ($e.html() === '')
-			{
-				$e.remove();
-				return;
-			}
+		const ruby = element.querySelectorAll('ruby');
+		for (const r of ruby)
+		{
+			this._replaceRuby(r);
+		}
+	}
 
-			const $rb = $e.find('rb');
-			const $rt = $e.find('rt');
-			if (($rb.length === 0
-			) && ($rt.length === 0
-			))
-			{
-				$e.replaceWith($e.html());
-				return;
-			}
+	/**
+	 * Convert Ruby tag:
+	 * <ruby> <rb>明日</rb> <rp>(</rp><rt>Ashita</rt><rp>)</rp> </ruby>
+	 * to text:
+	 * 明日 (Ashita)
+	 * @param {HTMLElement} ruby
+	 * @private
+	 */
+	_replaceRuby(ruby)
+	{
+		if (ruby.innerHTML.trim() === '')
+		{
+			ruby.remove();
+			return;
+		}
 
-			if ($rb.length > 0)
-			{
-				const rb = $rb.html()
-				let rt = self.trim($rt.html(), '・');
-				if (rt)
-				{
-					rt = ' (' + rt + ') ';
-				}
+		// replace <rp> - brackets ()
+		const brackets = ruby.querySelectorAll('rp');
+		for (const e of brackets)
+		{
+			e.after(' ' + e.innerHTML + ' ');
+			e.remove();
+		}
 
-				$e.replaceWith(rb + rt);
-			}
-			else
-			{
-				const rt = $rt.html();
-				$rt.remove();
+		// replace <rb> - legacy tag for the main text
+		const main_text = ruby.querySelectorAll('rb');
+		for (const e of main_text)
+		{
+			e.after(e.innerHTML);
+			e.remove();
+		}
 
-				const rb = $e.html();
+		// replace <rt> - tag for the upper text
+		const upper_text = ruby.querySelectorAll('rt');
+		for (const e of upper_text)
+		{
+			const prefix = e.previousSibling.nodeValue.trim().endsWith('(') ? '' : ' (';
+			const suffix = e.nextSibling.nodeValue.trim().startsWith(')') ? '' : ') ';
+			e.after(prefix + e.innerHTML + suffix);
+			e.remove();
+		}
 
-				$e.replaceWith(rb + ' (' + rt + ')');
-			}
-		});
+		let html = ruby.innerHTML;
+		html = html.replaceAll('  ', ' ');
+		html = html.replaceAll('( ', '(');
+		html = html.replaceAll(' )', ')');
+		ruby.after(html);
+		ruby.remove();
 	}
 
 	/**
@@ -364,5 +376,16 @@ class Proxy
 		}
 
 		return (start > 0 || end < str.length) ? str.substring(start, end) : str;
+	}
+
+	static _test()
+	{
+		const div = document.createElement('div');
+		div.innerHTML = '<ruby> <rb>明日</rb> <rp>(</rp><rt>Ashita</rt><rp>)</rp> </ruby>';
+		const tl = new Proxy();
+		tl._replaceRubyAll(div);
+		const expected = '明日 (Ashita)';
+		const result = div.innerHTML.trim();
+		console.assert(result === expected, '\nExpected: %o\nGot: %o', expected, result);
 	}
 }

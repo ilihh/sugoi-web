@@ -49,8 +49,13 @@ class TranslatorLine
 	 */
 	set translation(value)
 	{
+		if (value == null)
+		{
+			console.error('Broken Translation: ' + document.location.toString() + ' -> ' + this.element.innerHTML);
+		}
+
 		this._translation = value;
-		this.element.innerHTML = this.translation;
+		this.element.innerHTML = value;
 	}
 
 	/**
@@ -59,6 +64,11 @@ class TranslatorLine
 	 */
 	get valid()
 	{
+		if (this.translation == null)
+		{
+			return false;
+		}
+
 		const max_length = 10;
 
 		if (this.translation.length < max_length)

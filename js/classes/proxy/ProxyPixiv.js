@@ -10,6 +10,8 @@ class ProxyPixiv extends Proxy
 	constructor()
 	{
 		super();
+
+		this.content_selectors = ['main span.text-count', ];
 	}
 
 	/**

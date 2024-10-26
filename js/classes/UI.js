@@ -159,7 +159,7 @@ class UI
 		this._sugoi.setConfig(config);
 		this._deepl.setConfig(config);
 
-		this.updateView();
+		const _ = this.updateView();
 	}
 
 	async load()
@@ -188,7 +188,7 @@ class UI
 
 			if (this.config.alwaysTranslate)
 			{
-				this.translate();
+				const _ = this.translate();
 			}
 		}
 		else
