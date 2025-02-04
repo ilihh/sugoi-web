@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.2.6",
+	"version": "1.2.7",
 
 	"manifest_version": 3,
 	"incognito": "split",
@@ -43,6 +43,7 @@
 				"js/classes/common/TranslationInfo.js",
 				"js/classes/common/TranslationMeta.js",
 
+				"js/classes/TextSplitter.js",
 				"js/classes/Translator.js",
 				"js/classes/TranslatorSugoi.js",
 				"js/classes/TranslatorDeepL.js",

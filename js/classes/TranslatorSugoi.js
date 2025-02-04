@@ -7,7 +7,7 @@ class TranslatorSugoi extends Translator
 	 * @type {string}
 	 * @private
 	 */
-	_url = 'http://localhost';
+	_url = 'http://127.0.0.1';
 
 	/**
 	 *
@@ -22,6 +22,20 @@ class TranslatorSugoi extends Translator
 	 * @private
 	 */
 	_concurrentRequests = 10;
+
+	/**
+	 *
+	 * @type {TextSplitter}
+	 * @private
+	 */
+	_splitter = new TextSplitter();
+
+	/**
+	 *
+	 * @type {boolean}
+	 * @private
+	 */
+	_split_long_lines = true;
 
 	/**
 	 * @param {Config} config
@@ -83,7 +97,7 @@ class TranslatorSugoi extends Translator
 			while (filtered.length > 0)
 			{
 				const line = filtered.shift();
-				line.translation = await this._request(line.original);
+				line.translation = await this.translate(line.original);
 				translated += 1;
 				this._triggerProgress(translated, total);
 			}
@@ -104,7 +118,24 @@ class TranslatorSugoi extends Translator
 	 */
 	async translate(jpn)
 	{
-		return await this._request(jpn)
+		if (!this._split_long_lines)
+		{
+			return this._request(jpn);
+		}
+
+		// Sugoi cannot translate long text (400+ symbols) so split text on lines shorter than 350 symbols
+		/**
+		 *
+		 * @type {string[]}
+		 */
+		const result = [];
+		const lines = this._splitter.split(jpn, 350);
+		for (const line of lines)
+		{
+			result.push(await this._request(line));
+		}
+
+		return result.join(' ');
 	}
 
 	/**

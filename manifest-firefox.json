@@ -1,6 +1,6 @@
 {
 	"name": "Sugoi Web Translation",
-	"version": "1.2.6",
+	"version": "1.2.7",
 
 	"manifest_version": 2,
 
@@ -22,7 +22,7 @@
 	"permissions": [
 		"storage",
 		"tabs",
-		"http://localhost/*",
+		"http://127.0.0.1/*",
 		"https://api-free.deepl.com/v2/*",
 		"https://api.deepl.com/v2/*"
 	],
@@ -42,6 +42,7 @@
 				"js/classes/common/TranslationInfo.js",
 				"js/classes/common/TranslationMeta.js",
 
+				"js/classes/TextSplitter.js",
 				"js/classes/Translator.js",
 				"js/classes/TranslatorSugoi.js",
 				"js/classes/TranslatorDeepL.js",
