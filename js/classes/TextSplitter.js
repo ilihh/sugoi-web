@@ -63,7 +63,7 @@ class TextSplitter
 	 */
 	_forced_pos(pos)
 	{
-		return this.constructor._pos_of(pos, self._forced_end_symbols);
+		return this.constructor._pos_of(pos, this._forced_end_symbols);
 	}
 
 	/**
