@@ -138,6 +138,20 @@ class TranslatorSugoi extends Translator
 		return result.join(' ');
 	}
 
+	async _request(jpn, timeout = 0)
+	{
+		// workaround for the Chrome net::ERR_CONTENT_LENGTH_MISMATCH invalid errors
+		try
+		{
+			return await this.__request(jpn, timeout);
+		}
+		catch (e)
+		{
+			console.log('repeat: ', jpn);
+			return await this._request(jpn, timeout);
+		}
+	}
+
 	/**
 	 *
 	 * @param {string} jpn
@@ -145,7 +159,7 @@ class TranslatorSugoi extends Translator
 	 * @returns {Promise<string>}
 	 * @private
 	 */
-	async _request(jpn, timeout = 0)
+	async __request(jpn, timeout = 0)
 	{
 		const data = {
 			message: 'translate sentences',
