@@ -17,9 +17,11 @@ Extension for Chromium-based browsers and Firefox to translate Japanese web nove
 6. Press the "Load Temporary Add-on" button and select *manifest.json*
 
 **Using with Sugoi:**
-1. Open *{Sugoi folder} / backendServer / Program-Backend / Sugoi-Japanese-Translator / offlineTranslation*
-2. Run *activateOfflineTranslationServer.bat* to start server.
-3. Now **Translate** button can be used
+
+1. Install [Sugoi Translator Toolkit](https://www.patreon.com/mingshiba)
+2. Start *Sugoi-Translator-Toolkit* from the installed folder
+3. Select *Sugoi Translator Offline*
+4. Now **Translate** button can be used
 
 **Cross-extension messaging**
 
