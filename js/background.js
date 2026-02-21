@@ -236,10 +236,10 @@ function is_firefox()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	const promise = processMessage(request, sender).then(sendResponse);
-	return is_firefox ? promise : true;
+	return is_firefox() ? promise : true;
 });
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
 	const promise = processExternalMessage(request, sender).then(sendResponse);
-	return is_firefox ? promise : true;
+	return is_firefox() ? promise : true;
 });
